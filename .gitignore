@@ -58,6 +58,6 @@ Release/
 
 # working directory for program
 *WDIR.h
-Simulation/WDIR.h
+/Simulation/WDIR.h
 
 
