@@ -5,7 +5,7 @@
 
 int main()
 {
-    printf("test");
+    printf("test, or something");
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
