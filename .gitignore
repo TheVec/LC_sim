@@ -56,4 +56,4 @@ dkms.conf
 x64/
 
 # working directory for program
-*WDIR.h
+WDIR.h
