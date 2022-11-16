@@ -57,9 +57,10 @@ dkms.conf
 **/Release/**
 
 # working directory for program
-**/WDIR.h
+**/Simulation/WDIR.h
 Simulation/WDIR.h
 WDIR.*
 *WDIR.h
 /Simulation/WDIR.h
+
 
