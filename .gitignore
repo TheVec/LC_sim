@@ -57,7 +57,7 @@ Debug/
 Release/
 
 # working directory for program
-/Simulation/WDIR.h
-
+*WDIR.h
+Simulation/WDIR.h
 
 
