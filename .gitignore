@@ -52,12 +52,15 @@ Mkfile.old
 dkms.conf
 
 # Visual Studio
-.vs
-Debug/
-Release/
+**/.vs
+**/Debug/**
+**/Release/**
 
 # working directory for program
-**/Simulation/WDIR.h
-
+**/WDIR.h
+Simulation/WDIR.h
+WDIR.*
+*WDIR.h
+/Simulation/WDIR.h
 
 
