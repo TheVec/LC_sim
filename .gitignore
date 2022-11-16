@@ -53,7 +53,8 @@ dkms.conf
 
 # Visual Studio
 .vs
-x64/
+Debug/
+Release/
 
 # working directory for program
 WDIR.h
