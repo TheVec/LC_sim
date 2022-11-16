@@ -1,2 +1,5 @@
-﻿  Simulation.cpp
+﻿  MemoryAllocation.cpp
+  PlotLib.cpp
+  Simulation.cpp
+  Generating Code...
   Simulation.vcxproj -> X:\LC\LC_sim\LC_sim\Simulation\x64\Debug\Simulation.exe

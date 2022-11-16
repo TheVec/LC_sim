@@ -1,11 +1,15 @@
 // Simulation.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
-#include <stdio.h>
+#include "Simulation.h"
 
 int main()
 {
-    printf("test, or something");
+    printf("test, or something\n");
+
+    double* current;
+    allocateStateArray(&current);
+
+    plotSingleState(current, "test", 0, "Title");
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
