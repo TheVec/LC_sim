@@ -60,3 +60,6 @@ dkms.conf
 **/WDIR.h
 Simulation/WDIR.h
 WDIR.*
+*WDIR.h
+/Simulation/WDIR.h
+
