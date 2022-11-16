@@ -53,10 +53,10 @@ dkms.conf
 
 # Visual Studio
 .vs
-Debug/
-Release/
+**/Debug
+**/Release
 
 # working directory for program
-*WDIR.h
+**/WDIR.h
 Simulation/WDIR.h
 WDIR.*
