@@ -57,4 +57,8 @@ Debug/
 Release/
 
 # working directory for program
+<<<<<<< HEAD
 Simulation/WDIR.h
+=======
+*WDIR.h
+>>>>>>> 25e6979ad5538e9f86446a6a135f66bf97f014b1
