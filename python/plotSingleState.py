@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker
 
 import sys
 
-plt.ticklabel_format(style='sci', axis='x', scilimits=(0,3))
+plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,100))
 plt.rcParams['font.size'] = '30'
 plt.rcParams.update({
     "text.usetex": True,
@@ -21,8 +21,8 @@ wdir = sys.argv[1]
 deltax = float(sys.argv[2])
 filename = sys.argv[3]
 title = sys.argv[4]
-min_temp = sys.argv[5]
-max_temp = sys.argv[6]
+min_temp = float(sys.argv[5])
+max_temp = float(sys.argv[6])
 
 dumppath = wdir + r"\dump\dumpSingleState.txt"
 savepath = wdir + r'\output\\' + filename
