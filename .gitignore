@@ -54,3 +54,6 @@ dkms.conf
 # Visual Studio
 .vs
 x64/
+
+# working directory for program
+WDIR.h
