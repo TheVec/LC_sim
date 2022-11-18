@@ -130,12 +130,15 @@
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="PlotLib.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="sunAngle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CONFIG.h" />
     <ClInclude Include="MemoryAllocation.h" />
     <ClInclude Include="PlotLib.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="struct.h" />
+    <ClInclude Include="sunAngle.h" />
     <ClInclude Include="WDIR.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
