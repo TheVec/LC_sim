@@ -4,30 +4,41 @@
 
 int main()
 {
-    printf("test, or something\n");
+    double* prev, * curr, * next;
 
-    double* current;
-    allocateStateArray(&current);
+    allocateStateArray(&prev);
+    allocateStateArray(&curr);
+    allocateStateArray(&next);
 
-    plotSingleState(current, "test", 0, "Title");
-
-    computePositionInEarthCoordinateSystem(0.0, -7.5);
-    initializeXiYDelta();
-
-    char path[1023];
-    sprintf_s(path, "%s\\dump\\angleDump.txt", WDIR);
-    FILE* f;
-    fopen_s(&f, path, "w");
-
-    if (f != 0)
+    for (int i = 0; i < 100000000; i++)
     {
-        for (int i = 0; i < 36500; i++)
+        performStep(prev, curr, next);
+        permutePointers(&prev, &curr, &next);
+
+        if (i % 1000000 == 0 )
         {
-            fprintf_s(f, "%.1lf\n", 360.0 * computeAngleOfIncidence(0.01 * i) / TAU);
+            plotSingleState(curr, "firstSimulation", i / 1000000, "Title");
         }
-        
-        fclose(f);
-    }   
+    }
+
+
+    //computePositionInEarthCoordinateSystem(0.0, -7.5);
+    //initializeXiYDelta();
+
+    //char path[1023];
+    //sprintf_s(path, "%s\\dump\\angleDump.txt", WDIR);
+    //FILE* f;
+    //fopen_s(&f, path, "w");
+
+    //if (f != 0)
+    //{
+    //    for (int i = 0; i < 36500; i++)
+    //    {
+    //        fprintf_s(f, "%.1lf\n", 360.0 * computeAngleOfIncidence(0.01 * i) / TAU);
+    //    }
+    //    
+    //    fclose(f);
+    //}   
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

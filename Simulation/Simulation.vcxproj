@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="heatEqn.cpp" />
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="PlotLib.cpp" />
     <ClCompile Include="Simulation.cpp" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CONFIG.h" />
+    <ClInclude Include="heatEqn.h" />
     <ClInclude Include="MemoryAllocation.h" />
     <ClInclude Include="PlotLib.h" />
     <ClInclude Include="Simulation.h" />
