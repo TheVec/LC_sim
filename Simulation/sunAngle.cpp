@@ -68,7 +68,7 @@ vec3 computeMatrixVecProduct(mat3x3 mat, vec3 v)
 	return result;
 }
 
-//unit of time is days
+//unit of time is seconds
 vec3 computeNormalVector(double time)
 {
 	mat3x3 day_rotation = computeZaxisRotationMatrix((- OMEGA_D) * time);
@@ -88,7 +88,7 @@ vec3 computeNormalVector(double time)
 }
 
 /*
-* unit of time is days
+* unit of time is seconds
 * initializeXiYDelta() MUST be ran once before this.
 */
 double computeAngleOfIncidence(double time)

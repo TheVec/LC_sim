@@ -35,6 +35,7 @@ temp = np.loadtxt(dumppath, skiprows = 1, usecols = [1])
 
 fig = plt.figure(figsize = (14,12), dpi = 120)
 ax = plt.gca()
+plt.grid(visible = True)
 plt.plot(temp, depth, linewidth = 5)
 plt.xlabel("Temperature $T$ [K]")
 plt.ylabel("Depth $z$ [m]")

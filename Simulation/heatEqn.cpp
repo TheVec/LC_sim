@@ -1,41 +1,55 @@
 #include "heatEqn.h"
 
 //performs a simulation time step for indices within the simulation domain
-void performSingleIndexStepInner(int index, double* prev, double* curr, double* next)
+void performSingleIndexStepInner(int index, double* curr, double* next)
 {
 	double finite_difference = curr[index - 1] - 2.0 * curr[index] + curr[index + 1];
 
-	next[index] = prev[index] + (2 * THERMAL_DIFFUSIVITY * DELTA_T / (DELTA_X * DELTA_X)) * finite_difference;
+	next[index] = curr[index] + (THERMAL_DIFFUSIVITY * DELTA_T / (DELTA_X * DELTA_X)) * finite_difference;
 } 
 
 //performs a simulation time step for the upper boundary (z=0)
-void performSingleIndexStepUpperBoundary(double* prev, double* curr, double* next)
+void performSingleIndexStepUpperBoundary(double* curr, double* next, double time)
 {
-	next[0] = prev[0] + (2.0 * DELTA_T * POWER / HEAT_CAPACITY);
+	double currsq = curr[0] * curr[0];
+	double currquart = currsq * currsq;
+
+	double sunAngle = computeAngleOfIncidence(time);
+
+	double powerFac = (sunAngle < 0.0) ? 0.0 : sin(sunAngle);
+
+	next[0] = curr[0] + (DELTA_T * (powerFac * SOLAR_POWER - EPSILON * SIGMA * currquart) / HEAT_CAPACITY);
 }
 
 //performs a simulation time step for the lower boundary (z=-zmax)
-void performSingleIndexStepLowerBoundary(double* prev, double* curr, double* next)
+void performSingleIndexStepLowerBoundary(double* curr, double* next)
 {	
-	next[RESOLUTION - 1] = 0.0;
+	next[RESOLUTION - 1] = curr[RESOLUTION - 1] + ((DELTA_T * CORE_POWER) / HEAT_CAPACITY);
 }
 
 //performs a simulation time step for all indices.
-void performStep(double* prev, double* curr, double* next)
+void performStep(double* curr, double* next, double time)
 {
-	performSingleIndexStepUpperBoundary(prev, curr, next);
+	performSingleIndexStepUpperBoundary(curr, next, time);
 	for (int i = 1; i < RESOLUTION - 1; i++)
 	{
-		performSingleIndexStepInner(i, prev, curr, next);
+		performSingleIndexStepInner(i, curr, next);
 	}
-	performSingleIndexStepLowerBoundary(prev, curr, next);
+	performSingleIndexStepLowerBoundary(curr, next);
 }
 
-void permutePointers(double** prev, double** curr, double** next)
+void permutePointers(double** curr, double** next)
 {
 	double* dummy;
-	dummy = *prev;
-	*prev = *curr;
+	dummy = *curr;
 	*curr = *next;
 	*next = dummy;
+}
+
+void setArrayToInitialValue(double* state)
+{
+	for (int i = 0; i < RESOLUTION; i++)
+	{
+		state[i] = INITIAL_TEMPERATURE;
+	}
 }

@@ -4,22 +4,39 @@
 
 int main()
 {
-    double* prev, * curr, * next;
+    double * curr, * next;
 
-    allocateStateArray(&prev);
+
+    printf("timestep %s\n", (DELTA_T < DELTA_X * DELTA_X / (4.0 * THERMAL_DIFFUSIVITY)) ? "ok" : "not ok");
+
     allocateStateArray(&curr);
+    setArrayToInitialValue(curr);
     allocateStateArray(&next);
+    setArrayToInitialValue(next);
 
-    for (int i = 0; i < 100000000; i++)
+    char title[1023];
+
+    computePositionInEarthCoordinateSystem(47.0, -7.5);
+    initializeXiYDelta();
+
+    for (int i = 0; i < TOTAL_TIMESTEPS; i++)
     {
-        performStep(prev, curr, next);
-        permutePointers(&prev, &curr, &next);
+        performStep(curr, next, i * DELTA_T);
+        permutePointers(&curr, &next);
 
-        if (i % 1000000 == 0 )
+        if (i % TIMESTEPS_PER_FRAME == TIMESTEPS_PER_FRAME - 1)
         {
-            plotSingleState(curr, "firstSimulation", i / 1000000, "Title");
+            printf("%.2lf%%\r", 100.0* (i /( (double) TOTAL_TIMESTEPS)));
+            if (i / (TIMESTEPS_PER_FRAME * FRAMES_PER_YEAR) > START_SAVE_YEAR)
+            {
+                printf("\n");
+                sprintf_s(title, "$t=%lf$ d", i * DELTA_T / 86400.0);
+                plotSingleState(curr, "firstSimulation", i / TIMESTEPS_PER_FRAME, title);
+            }
         }
     }
+
+    
 
 
     //computePositionInEarthCoordinateSystem(0.0, -7.5);
