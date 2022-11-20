@@ -8,6 +8,7 @@ int main()
 
 
     printf("timestep %s\n", (DELTA_T < DELTA_X * DELTA_X / (4.0 * THERMAL_DIFFUSIVITY)) ? "ok" : "not ok");
+    printf("equilibrium ratio (1-a)/epsilon = %.3lf\n", (1 - ALBEDO) / EPSILON);
 
     allocateStateArray(&curr);
     setArrayToInitialValue(curr);
@@ -16,7 +17,7 @@ int main()
 
     char title[1023];
 
-    computePositionInEarthCoordinateSystem(47.0, -7.5);
+    computePositionInEarthCoordinateSystem(54.12, -20.26);
     initializeXiYDelta();
 
     for (int i = 0; i < TOTAL_TIMESTEPS; i++)
@@ -30,7 +31,7 @@ int main()
             if (i / (TIMESTEPS_PER_FRAME * FRAMES_PER_YEAR) > START_SAVE_YEAR)
             {
                 printf("\n");
-                sprintf_s(title, "$t=%lf$ d", i * DELTA_T / 86400.0);
+                sprintf_s(title, "$t=%lf$ years", i * DELTA_T / (86400.0 * 365.2422));
                 plotSingleState(curr, "firstSimulation", i / TIMESTEPS_PER_FRAME, title);
             }
         }

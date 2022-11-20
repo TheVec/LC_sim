@@ -29,7 +29,7 @@ void plotSingleState(double* state, const char* filename, int index, const char*
 
 	//generating system call string
 	char cmd[1024];
-	sprintf_s(cmd, "python %s\\python\\plotSingleState.py %s %e %s_%04d \"%s\" %e %e", WDIR, WDIR, DELTA_X, filename, index, title, MIN_TEMP, MAX_TEMP);
+	sprintf_s(cmd, "python %s\\python\\plotSingleState.py %s %e %s_%04d \"%s\" %e %e %e", WDIR, WDIR, DELTA_X, filename, index, title, MIN_TEMP, MAX_TEMP, DISPLAY_DEPTH);
 
 	//running python script
 	system(cmd);

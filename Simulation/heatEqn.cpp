@@ -24,7 +24,8 @@ void performSingleIndexStepUpperBoundary(double* curr, double* next, double time
 //performs a simulation time step for the lower boundary (z=-zmax)
 void performSingleIndexStepLowerBoundary(double* curr, double* next)
 {	
-	next[RESOLUTION - 1] = curr[RESOLUTION - 1] + ((DELTA_T * CORE_POWER) / HEAT_CAPACITY);
+	//next[RESOLUTION - 1] = curr[RESOLUTION - 1] + ((DELTA_T * CORE_POWER) / HEAT_CAPACITY);
+	next[RESOLUTION - 1] = LOWER_CONSTANT_TEMPERATURE;
 }
 
 //performs a simulation time step for all indices.
@@ -50,6 +51,6 @@ void setArrayToInitialValue(double* state)
 {
 	for (int i = 0; i < RESOLUTION; i++)
 	{
-		state[i] = INITIAL_TEMPERATURE;
+		state[i] = INITIAL_SURFACE_TEMPERATURE + (LOWER_CONSTANT_TEMPERATURE - INITIAL_SURFACE_TEMPERATURE) * (i/((double)RESOLUTION));
 	}
 }
