@@ -18,7 +18,7 @@ void performSingleIndexStepUpperBoundary(double* curr, double* next, double time
 
 	double powerFac = (sunAngle < 0.0) ? 0.0 : sin(sunAngle);
 
-	next[0] = curr[0] + (DELTA_T * (powerFac * SOLAR_POWER - EPSILON * SIGMA * currquart) / HEAT_CAPACITY);
+	next[0] = curr[0] + (DELTA_T * ((1-ALBEDO) * powerFac * SOLAR_POWER - EPSILON * SIGMA * currquart) / HEAT_CAPACITY);
 }
 
 //performs a simulation time step for the lower boundary (z=-zmax)

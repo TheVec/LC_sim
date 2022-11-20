@@ -21,6 +21,7 @@
 #define EPSILON 1.0
 #define SIGMA 5.67e-8 //W/(m^2 K^4) Stefan-Boltzmann constant
 #define INITIAL_TEMPERATURE 250.0 //Kelvin
+#define ALBEDO 0.434 
 
 #define DELTA (23.5 * TAU / 360.0) //earth rotation axis inclination
 
