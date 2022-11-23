@@ -22,6 +22,7 @@ DEPTH = 30 #[meters]
 RESOLUTION = 1024 #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
 T_BOT = 273.15 + 9.4 #temp at z=-30m [K]
+DELTA_T = 1 #[sec], to be replaced with actual expression
 
 #Plot constants
 DISPLAY_DEPTH = 25 #[meters]
@@ -83,6 +84,17 @@ def computeAngleOfIncidence(time):
     diff_sq = diff@diff
     
     return m.asin(numerator/(m.sqrt(norm_sq*diff_sq)))
+
+def computeTimeStepUpper():
+    pass
+
+def computeTimeStepLower():
+    pass
+
+def computeTimeStep():
+    pass
+
+
 
 
 POS_ON_EARTH = positionOnEarth(0, 0) #this has to be done first
