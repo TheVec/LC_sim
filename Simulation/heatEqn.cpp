@@ -1,7 +1,7 @@
 #include "heatEqn.h"
 
 //performs a simulation time step for indices within the simulation domain
-void performSingleIndexStepInner(int index, double* curr, double* next)
+inline void performSingleIndexStepInner(int index, double* curr, double* next)
 {
 	double finite_difference = curr[index - 1] - 2.0 * curr[index] + curr[index + 1];
 
@@ -9,7 +9,7 @@ void performSingleIndexStepInner(int index, double* curr, double* next)
 } 
 
 //performs a simulation time step for the upper boundary (z=0)
-void performSingleIndexStepUpperBoundary(double* curr, double* next, double time)
+inline void performSingleIndexStepUpperBoundary(double* curr, double* next, double time)
 {
 	double currsq = curr[0] * curr[0];
 	double currquart = currsq * currsq;
@@ -22,7 +22,7 @@ void performSingleIndexStepUpperBoundary(double* curr, double* next, double time
 }
 
 //performs a simulation time step for the lower boundary (z=-zmax)
-void performSingleIndexStepLowerBoundary(double* curr, double* next)
+inline void performSingleIndexStepLowerBoundary(double* curr, double* next)
 {	
 	//next[RESOLUTION - 1] = curr[RESOLUTION - 1] + ((DELTA_T * CORE_POWER) / HEAT_CAPACITY);
 	next[RESOLUTION - 1] = LOWER_CONSTANT_TEMPERATURE;
