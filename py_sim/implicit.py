@@ -20,9 +20,9 @@ global POS_ON_EARTH
 #Simulation constants
 FRAMES_PER_YEAR = 52
 TIMESTEPS_PER_FRAME = 4000
-YEAR_COUNT = 5
+YEAR_COUNT = 1
 DEPTH = 30 #[meters]
-RESOLUTION = 256 #array size, number of gridpoints 
+RESOLUTION = 512 #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
 T_BOT = 273.15 + 9.4 #temp at z=-30m [K]
 DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) #[sec], to be replaced with actual expression
@@ -31,9 +31,11 @@ HEAT_CAPACITY = 2
 ALBEDO = 0
 EPSILON = 1
 T_TOP = 300 #might add sun-power and stuff later on
-global COEFF_MAT_INV
+global COEFF_MAT_IMP_INV #coefficient matrix for implicit solver
+global COEFF_MAT_EXP_INV #cpefficient matrix for explicit solver
 TOTAL_TIMESTEPS = YEAR_COUNT * FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME
-
+global c
+c = DELTA_T*THERMAL_DIFFUSIVITY/(DELTA_X**2) #helper constant
 #Plot constants
 DISPLAY_DEPTH = 25 #[meters]
 
@@ -98,9 +100,8 @@ def computeAngleOfIncidence(time):
 """ Computes the coefficient matrix for the matrix equation to be solved in every
     timestep (Ax_n+1 = x_n)
 """
-def computeCoeffMat():
+def computeCoeffMatImp():
     A = np.zeros((RESOLUTION,RESOLUTION))
-    c = DELTA_T*THERMAL_DIFFUSIVITY/(DELTA_X**2) #helper constant
     for i in range(1,RESOLUTION-1):
         A[i][i] = 1 + 2*c
         A[i][i-1] = -c
@@ -109,40 +110,65 @@ def computeCoeffMat():
     A[RESOLUTION-1][RESOLUTION-1] = 1
     return A
 
+def computeCoeffMatExp():
+    A = np.zeros((RESOLUTION,RESOLUTION))
+    for i in range(1,RESOLUTION-1):
+        A[i][i] = 1 - 2*c
+        A[i][i-1] = c
+        A[i][i+1] = c
+    A[0][0] = 1
+    A[RESOLUTION-1][RESOLUTION-1] = 1
+    return A
 """ Computes Array of next step
 """
-def computeNextTimeStep(time, current_array):
-    next_array = COEFF_MAT_INV@current_array
-    return next_array
+def computeNextTimeStepImp(time, current_array):
+    current_array = COEFF_MAT_IMP_INV@current_array
+    return current_array
     
-""" TO DO: implement 3 methods below to compare implicit vs explicit
-"""
-def computeTimeStepUpper():
-    pass
-
-def computeTimeStepLower():
-    pass
-
-def computeTimeStep():
-    pass
-
-
+def computeNextTimeStepExp(time, current_array):
+    current_array = COEFF_MAT_EXP@current_array
+    return current_array
 
 """ Initialize global constants 
 """
 POS_ON_EARTH = positionOnEarth(0, 0) #this has to be done first
-COEFF_MAT_INV = np.linalg.inv(computeCoeffMat())
+
+""" Implicit solver
+"""
+start_time = t.time()
+COEFF_MAT_IMP_INV = np.linalg.inv(computeCoeffMatImp())
 
 curr_arr = np.zeros(RESOLUTION)
 curr_arr[0] = T_TOP
 curr_arr[RESOLUTION-1] = T_BOT
 
+""" Printing in python sucks fat dick (slow af)
+"""
+print("Implicit: ")
 for i in range(0,TOTAL_TIMESTEPS):
-    next_arr = computeNextTimeStep(i*DELTA_T, curr_arr)
-    curr_arr = next_arr
-    
+    curr_arr = computeNextTimeStepImp(i*DELTA_T, curr_arr)
+end_time = t.time()
+imp_result = curr_arr
+print("Time needed: ", end_time-start_time, "s")
+
+""" Explicit Solver
+"""
+print("Explicit:")
+start_time = t.time()
+COEFF_MAT_EXP = computeCoeffMatExp()
+curr_arr = np.zeros(RESOLUTION)
+curr_arr[0] = T_TOP
+curr_arr[RESOLUTION-1] = T_BOT
+for i in range(0, TOTAL_TIMESTEPS):
+    curr_arr = computeNextTimeStepExp(i*DELTA_T, curr_arr)
+end_time = t.time()
+exp_result = curr_arr
+print("Time needed: ", end_time - start_time)
 """ Plotting
 """
 depth = np.linspace(0,-1*DEPTH, RESOLUTION)
-
-plt.plot(curr_arr, depth)
+fig = plt.figure(figsize=(20,10))
+plt.plot(imp_result, depth, color = 'green')
+plt.plot(exp_result, depth, color = 'red')
+plt.show()
+plt.close(fig)
