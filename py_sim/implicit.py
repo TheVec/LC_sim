@@ -18,11 +18,21 @@ OMEGA_Y = 2*m.pi/(365.2422 * 86400) #[rad/s]
 global POS_ON_EARTH
 
 #Simulation constants
+FRAMES_PER_YEAR = 52
+TIMESTEPS_PER_FRAME = 4000
+YEAR_COUNT = 5
 DEPTH = 30 #[meters]
-RESOLUTION = 1024 #array size, number of gridpoints 
+RESOLUTION = 256 #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
 T_BOT = 273.15 + 9.4 #temp at z=-30m [K]
-DELTA_T = 1 #[sec], to be replaced with actual expression
+DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) #[sec], to be replaced with actual expression
+THERMAL_DIFFUSIVITY = 2e-6
+HEAT_CAPACITY = 2
+ALBEDO = 0
+EPSILON = 1
+T_TOP = 300 #might add sun-power and stuff later on
+global COEFF_MAT_INV
+TOTAL_TIMESTEPS = YEAR_COUNT * FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME
 
 #Plot constants
 DISPLAY_DEPTH = 25 #[meters]
@@ -85,6 +95,28 @@ def computeAngleOfIncidence(time):
     
     return m.asin(numerator/(m.sqrt(norm_sq*diff_sq)))
 
+""" Computes the coefficient matrix for the matrix equation to be solved in every
+    timestep (Ax_n+1 = x_n)
+"""
+def computeCoeffMat():
+    A = np.zeros((RESOLUTION,RESOLUTION))
+    c = DELTA_T*THERMAL_DIFFUSIVITY/(DELTA_X**2) #helper constant
+    for i in range(1,RESOLUTION-1):
+        A[i][i] = 1 + 2*c
+        A[i][i-1] = -c
+        A[i][i+1] = -c
+    A[0][0] = 1
+    A[RESOLUTION-1][RESOLUTION-1] = 1
+    return A
+
+""" Computes Array of next step
+"""
+def computeNextTimeStep(time, current_array):
+    next_array = COEFF_MAT_INV@current_array
+    return next_array
+    
+""" TO DO: implement 3 methods below to compare implicit vs explicit
+"""
 def computeTimeStepUpper():
     pass
 
@@ -96,12 +128,21 @@ def computeTimeStep():
 
 
 
-
+""" Initialize global constants 
+"""
 POS_ON_EARTH = positionOnEarth(0, 0) #this has to be done first
+COEFF_MAT_INV = np.linalg.inv(computeCoeffMat())
 
+curr_arr = np.zeros(RESOLUTION)
+curr_arr[0] = T_TOP
+curr_arr[RESOLUTION-1] = T_BOT
 
+for i in range(0,TOTAL_TIMESTEPS):
+    next_arr = computeNextTimeStep(i*DELTA_T, curr_arr)
+    curr_arr = next_arr
+    
+""" Plotting
+"""
+depth = np.linspace(0,-1*DEPTH, RESOLUTION)
 
-
-
-
-
+plt.plot(curr_arr, depth)
