@@ -3,6 +3,7 @@
 Created on Tue Nov 22 07:29:15 2022
 
 @author: Thierry
+
 """
 import numpy as np
 import time as t
@@ -20,9 +21,9 @@ global POS_ON_EARTH
 #Simulation constants
 FRAMES_PER_YEAR = 52
 TIMESTEPS_PER_FRAME = 4000
-YEAR_COUNT = 1
+YEAR_COUNT = 5
 DEPTH = 30 #[meters]
-RESOLUTION = 512 #array size, number of gridpoints 
+RESOLUTION = 1024 #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
 T_BOT = 273.15 + 9.4 #temp at z=-30m [K]
 DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) #[sec], to be replaced with actual expression
@@ -32,12 +33,11 @@ ALBEDO = 0
 EPSILON = 1
 T_TOP = 300 #might add sun-power and stuff later on
 global COEFF_MAT_IMP_INV #coefficient matrix for implicit solver
-global COEFF_MAT_EXP_INV #cpefficient matrix for explicit solver
+global COEFF_MAT_EXP_INV #coefficient matrix for explicit solver
 TOTAL_TIMESTEPS = YEAR_COUNT * FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME
 global c
 c = DELTA_T*THERMAL_DIFFUSIVITY/(DELTA_X**2) #helper constant
-#Plot constants
-DISPLAY_DEPTH = 25 #[meters]
+
 
 """ earth coordinates from given longi-/latitude angles, taken in degrees
 
@@ -142,8 +142,7 @@ curr_arr = np.zeros(RESOLUTION)
 curr_arr[0] = T_TOP
 curr_arr[RESOLUTION-1] = T_BOT
 
-""" Printing in python sucks fat dick (slow af)
-"""
+
 print("Implicit: ")
 for i in range(0,TOTAL_TIMESTEPS):
     curr_arr = computeNextTimeStepImp(i*DELTA_T, curr_arr)
@@ -156,14 +155,15 @@ print("Time needed: ", end_time-start_time, "s")
 print("Explicit:")
 start_time = t.time()
 COEFF_MAT_EXP = computeCoeffMatExp()
-curr_arr = np.zeros(RESOLUTION)
-curr_arr[0] = T_TOP
-curr_arr[RESOLUTION-1] = T_BOT
+curr_arr1 = np.zeros(RESOLUTION)
+curr_arr1[0] = T_TOP
+curr_arr1[RESOLUTION-1] = T_BOT
 for i in range(0, TOTAL_TIMESTEPS):
-    curr_arr = computeNextTimeStepExp(i*DELTA_T, curr_arr)
+    curr_arr1 = computeNextTimeStepExp(i*DELTA_T, curr_arr)
 end_time = t.time()
-exp_result = curr_arr
-print("Time needed: ", end_time - start_time)
+exp_result = curr_arr1
+print("Time needed: ", end_time - start_time, "s")
+
 """ Plotting
 """
 depth = np.linspace(0,-1*DEPTH, RESOLUTION)
