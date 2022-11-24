@@ -71,7 +71,7 @@ vec3 computeMatrixVecProduct(mat3x3 mat, vec3 v)
 //unit of time is seconds
 vec3 computeNormalVector(double time)
 {
-	mat3x3 day_rotation = computeZaxisRotationMatrix((- OMEGA_D) * time);
+	mat3x3 day_rotation = computeZaxisRotationMatrix((OMEGA_D) * time);
 	mat3x3 year_rotation = computeZaxisRotationMatrix((OMEGA_Y) * time);
 
 	vec3 result = positionOnEarth;

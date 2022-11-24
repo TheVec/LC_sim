@@ -8,8 +8,8 @@
 #define FRAMES_PER_YEAR (26)
 #define TIMESTEPS_PER_FRAME 8000
 #define DELTA_T (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) //seconds
-#define YEAR_COUNT 32
-#define START_SAVE_YEAR -1
+#define YEAR_COUNT 5
+#define START_SAVE_YEAR 5
 #define TOTAL_TIMESTEPS YEAR_COUNT * FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME
 #define MIN_TEMP 260.0   //lower boundary of plot temperature range in Kelvin
 #define MAX_TEMP 300.0 //upper boundary of plot temperature range in Kelvin
