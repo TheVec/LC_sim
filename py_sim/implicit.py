@@ -9,6 +9,7 @@ import numpy as np
 import time as t
 import matplotlib.pyplot as plt
 import math as m
+import os
 
 #Constants needed for sun sim
 EARTH_RADIUS = 6.371e6 #Earth radius [meters]
@@ -20,17 +21,18 @@ global POS_ON_EARTH
 
 #Simulation constants
 FRAMES_PER_YEAR = 52
-TIMESTEPS_PER_FRAME = 4000
-YEAR_COUNT = 5
+TIMESTEPS_PER_FRAME = 1500
+YEAR_COUNT = 1
 DEPTH = 30 #[meters]
-RESOLUTION = 1024 #array size, number of gridpoints 
+RESOLUTION = 50 #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
 T_BOT = 273.15 + 9.4 #temp at z=-30m [K]
-DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) #[sec], to be replaced with actual expression
+DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME * YEAR_COUNT)) #[sec], to be replaced with actual expression
 THERMAL_DIFFUSIVITY = 2e-6
 HEAT_CAPACITY = 2
 ALBEDO = 0
 EPSILON = 1
+SUN_POWER = 1000
 T_TOP = 300 #might add sun-power and stuff later on
 global COEFF_MAT_IMP_INV #coefficient matrix for implicit solver
 global COEFF_MAT_EXP_INV #coefficient matrix for explicit solver
@@ -129,6 +131,15 @@ def computeNextTimeStepExp(time, current_array):
     current_array = COEFF_MAT_EXP@current_array
     return current_array
 
+def computeT_TOP(time, T_TOP_prev):
+    inc_angle = computeAngleOfIncidence(time)
+    if inc_angle < 0:
+        power_fac = 0
+    else:
+        power_fac = m.sin(inc_angle)
+    T_TOP = power_fac*(1-ALBEDO)*SUN_POWER
+    return T_TOP
+
 """ Initialize global constants 
 """
 POS_ON_EARTH = positionOnEarth(0, 0) #this has to be done first
@@ -142,7 +153,8 @@ curr_arr = np.zeros(RESOLUTION)
 curr_arr[0] = T_TOP
 curr_arr[RESOLUTION-1] = T_BOT
 
-
+print("DELTA_T = ", DELTA_T)
+print("DELTA_X^2/2K", DELTA_X*DELTA_X/(2*THERMAL_DIFFUSIVITY))
 print("Implicit: ")
 for i in range(0,TOTAL_TIMESTEPS):
     curr_arr = computeNextTimeStepImp(i*DELTA_T, curr_arr)
@@ -166,9 +178,12 @@ print("Time needed: ", end_time - start_time, "s")
 
 """ Plotting
 """
+filepath = os.getcwd()
+filepath = filepath + '\\output\\cheese.png'
+print(filepath)
 depth = np.linspace(0,-1*DEPTH, RESOLUTION)
 fig = plt.figure(figsize=(20,10))
 plt.plot(imp_result, depth, color = 'green')
 plt.plot(exp_result, depth, color = 'red')
-plt.show()
+# plt.savefig(filepath)
 plt.close(fig)
