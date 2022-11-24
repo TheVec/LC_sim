@@ -20,14 +20,14 @@ OMEGA_Y = 2*m.pi/(365.2422 * 86400) #[rad/s]
 global POS_ON_EARTH
 
 #Simulation constants
-FRAMES_PER_YEAR = 52
-TIMESTEPS_PER_FRAME = 1500
-YEAR_COUNT = 1
+FRAMES_PER_YEAR = 1
+TIMESTEPS_PER_FRAME = 10
+YEAR_COUNT = 2
 DEPTH = 30 #[meters]
-RESOLUTION = 50 #array size, number of gridpoints 
+RESOLUTION = 512 #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
 T_BOT = 273.15 + 9.4 #temp at z=-30m [K]
-DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME * YEAR_COUNT)) #[sec], to be replaced with actual expression
+DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) #[sec], to be replaced with actual expression
 THERMAL_DIFFUSIVITY = 2e-6
 HEAT_CAPACITY = 2
 ALBEDO = 0
@@ -137,8 +137,8 @@ def computeT_TOP(time, T_TOP_prev):
         power_fac = 0
     else:
         power_fac = m.sin(inc_angle)
-    T_TOP = power_fac*(1-ALBEDO)*SUN_POWER
-    return T_TOP
+    T_TOP_a = power_fac*(1-ALBEDO)*SUN_POWER
+    return T_TOP_a
 
 """ Initialize global constants 
 """
@@ -178,12 +178,17 @@ print("Time needed: ", end_time - start_time, "s")
 
 """ Plotting
 """
-filepath = os.getcwd()
-filepath = filepath + '\\output\\cheese.png'
+filepath = os.path.realpath(os.path.dirname(__file__))
+filepath = filepath + '\\..\\output\\stabilitytest.png'
 print(filepath)
 depth = np.linspace(0,-1*DEPTH, RESOLUTION)
 fig = plt.figure(figsize=(20,10))
-plt.plot(imp_result, depth, color = 'green')
-plt.plot(exp_result, depth, color = 'red')
-# plt.savefig(filepath)
+plt.grid(True)
+plt.title('Stability Test for $\Delta t = $ '+str( DELTA_T )+'and $ (\Delta x)^2 / 2\cdot K = $' +str(DELTA_X*DELTA_X/(2*THERMAL_DIFFUSIVITY)), fontsize = 30)
+plt.plot(imp_result, depth, color = 'green', label = 'implicit')
+plt.plot(exp_result, depth, color = 'red', label = 'explicit')
+plt.legend(fontsize = 15)
+plt.xlabel('Temp [K]', fontsize = 20)
+plt.ylabel('Depth [m]', fontsize = 20)
+plt.savefig(filepath)
 plt.close(fig)
