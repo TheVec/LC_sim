@@ -21,14 +21,14 @@ global POS_ON_EARTH
 
 #Simulation constants
 FRAMES_PER_YEAR = 100
-TIMESTEPS_PER_FRAME = 2000    
-YEAR_COUNT = 3   
+TIMESTEPS_PER_FRAME = 4000    
+YEAR_COUNT = 1    
 DEPTH = 30 #[meters]
-RESOLUTION = 1024  #array size, number of gridpoints 
+RESOLUTION = 512  #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
 T_BOT = 273.15 + 9.4 #temp at z=-30m [K]
 DELTA_T = (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) #[sec], to be replaced with actual expression
-THERMAL_DIFFUSIVITY = 2e-6
+THERMAL_DIFFUSIVITY = 2e-6 
 HEAT_CAPACITY = 2
 ALBEDO = 0
 EPSILON = 1
@@ -163,13 +163,13 @@ for i in range(0,TOTAL_TIMESTEPS):
     """ Used for stability testing, commented out for computation speed test
         since matplotlib is quite slow
     """
-    if (i%TIMESTEPS_PER_FRAME == 0):
-        savepath = filepath + '\\..\\output\\stabilitytest_imp' + str(i%TIMESTEPS_PER_FRAME)
-        fig = plt.figure(figsize = (10,5))
-        plt.grid(True)
-        plt.plot(curr_arr, depth)
-        plt.savefig(savepath)
-        plt.close(fig)
+    # if (i%TIMESTEPS_PER_FRAME == 0):
+    #     savepath = filepath + '\\..\\output\\stabilitytest_imp' + str(i%TIMESTEPS_PER_FRAME)
+    #     fig = plt.figure(figsize = (10,5))
+    #     plt.grid(True)
+    #     plt.plot(curr_arr, depth)
+    #     plt.savefig(savepath)
+    #     plt.close(fig)
 end_time = t.time()
 imp_result = curr_arr
 print("Time needed: ", end_time-start_time, "s")
@@ -187,13 +187,13 @@ for i in range(0, TOTAL_TIMESTEPS):
     """ Used for stability testing, commented out for computation speed test
         since matplotlib is quite slow
     """
-    if (i%TIMESTEPS_PER_FRAME == 0):
-        savepath = filepath + '\\..\\output\\stabilitytest_exp' + str(i%TIMESTEPS_PER_FRAME)
-        fig = plt.figure(figsize = (10,5))
-        plt.grid(True)
-        plt.plot(curr_arr1, depth)
-        plt.savefig(savepath)
-        plt.close(fig)
+    # if (i%TIMESTEPS_PER_FRAME == 0):
+    #     savepath = filepath + '\\..\\output\\stabilitytest_exp' + str(i%TIMESTEPS_PER_FRAME)
+    #     fig = plt.figure(figsize = (10,5))
+    #     plt.grid(True)
+    #     plt.plot(curr_arr1, depth)
+    #     plt.savefig(savepath)
+    #     plt.close(fig)
 end_time = t.time()
 exp_result = curr_arr1
 print("Time needed: ", end_time - start_time, "s")
