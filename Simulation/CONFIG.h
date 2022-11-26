@@ -5,11 +5,11 @@
 #define INITIAL_SURFACE_TEMPERATURE (9.4 + 273.15) //Kelvin
 #define DISPLAY_DEPTH 25.0
 #define DELTA_X (DEPTH/(RESOLUTION - 1)) //spatial step
-#define FRAMES_PER_YEAR (26)
-#define TIMESTEPS_PER_FRAME 8000
-#define DELTA_T (86400.0 * 365.2422 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) //seconds
-#define YEAR_COUNT 5
-#define START_SAVE_YEAR 5
+#define FRAMES_PER_YEAR (365*10)
+#define TIMESTEPS_PER_FRAME 50
+#define DELTA_T (86400.0 * 365.0 / (FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME)) //seconds
+#define YEAR_COUNT 20
+#define START_SAVE_YEAR 19
 #define TOTAL_TIMESTEPS YEAR_COUNT * FRAMES_PER_YEAR * TIMESTEPS_PER_FRAME
 #define MIN_TEMP 260.0   //lower boundary of plot temperature range in Kelvin
 #define MAX_TEMP 300.0 //upper boundary of plot temperature range in Kelvin
@@ -28,7 +28,7 @@
 #define DELTA (23.5 * TAU / 360.0) //earth rotation axis inclination
 
 #define OMEGA_D (TAU / 86400) //in radians per second
-#define OMEGA_Y (TAU / (365.2422 * 86400)) //in radians per second
+#define OMEGA_Y (TAU / (365.0 * 86400)) //in radians per second
 
 //math constants
 #define TAU 6.28318530718

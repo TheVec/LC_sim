@@ -34,3 +34,49 @@ void plotSingleState(double* state, const char* filename, int index, const char*
 	//running python script
 	system(cmd);
 }
+
+void clearMultiStateDumpFile()
+{
+	char dumpdir[1024];
+	sprintf_s(dumpdir, "%s\\dump\\dumpMultiState.txt", WDIR);
+
+	//creating file stream in write mode
+	FILE* f;
+	fopen_s(&f, dumpdir, "w");
+
+	fprintf_s(f, "");
+
+	fclose(f);
+}
+
+void appendStateToDumpFile(double* state, double time)
+{
+	//generating dump path
+	char dumpdir[1024];
+	sprintf_s(dumpdir, "%s\\dump\\dumpMultiState.txt", WDIR);
+
+	//creating file stream in write mode
+	FILE* f;
+	fopen_s(&f, dumpdir, "a");
+
+	fprintf_s(f, "%e\t", time);
+
+	//dumping data
+	for (int i = 0; i < RESOLUTION; i++)
+	{
+		fprintf_s(f, "%e\t", state[i]);
+	}
+	fprintf_s(f, "\n");
+	//closing file stream
+	fclose(f);
+}
+
+void plotMultiState(const char* filename, const char* title)
+{
+	//generating system call string
+	char cmd[1024];
+	sprintf_s(cmd, "python %s\\python\\plot3Dsurface.py %s %e %s \"%s\" %e %e %e %d", WDIR, WDIR, DELTA_X, filename, title, MIN_TEMP, MAX_TEMP, DISPLAY_DEPTH, RESOLUTION);
+
+	//running python script
+	system(cmd);
+}

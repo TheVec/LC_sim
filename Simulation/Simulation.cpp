@@ -5,7 +5,7 @@
 int main()
 {
     double * curr, * next;
-
+    clearMultiStateDumpFile();
 
     printf("timestep %s\n", (DELTA_T < DELTA_X * DELTA_X / (4.0 * THERMAL_DIFFUSIVITY)) ? "ok" : "not ok");
     printf("equilibrium ratio (1-a)/epsilon = %.3lf\n", (1 - ALBEDO) / EPSILON);
@@ -31,11 +31,12 @@ int main()
         if (i % TIMESTEPS_PER_FRAME == TIMESTEPS_PER_FRAME - 1)
         {
             printf("%.2lf%%\r", 100.0* (i /( (double) TOTAL_TIMESTEPS)));
-            if (i / (TIMESTEPS_PER_FRAME * FRAMES_PER_YEAR) > START_SAVE_YEAR)
+            if (i / (TIMESTEPS_PER_FRAME * FRAMES_PER_YEAR) > START_SAVE_YEAR -1)
             {
-                printf("\n");
-                sprintf_s(title, "$t=%lf$ years", i * DELTA_T / (86400.0 * 365.2422));
-                plotSingleState(curr, "firstSimulation", i / TIMESTEPS_PER_FRAME, title);
+                //printf("\n");
+                sprintf_s(title, "$t=%lf$ years", i * DELTA_T / (86400.0 * 365.0));
+                //plotSingleState(curr, "firstSimulation", i / TIMESTEPS_PER_FRAME, title);
+                appendStateToDumpFile(curr, i * DELTA_T / (86400.0 * 365.0) - START_SAVE_YEAR);
             }
         }
     }
@@ -43,7 +44,7 @@ int main()
     double millis = 1000.0 * (clock() - start) / (double)CLOCKS_PER_SEC;
     printf("%.3lfms\n", millis);
 
-
+    plotMultiState("\"surface3d\"", "Temperature profile");
 
     //computePositionInEarthCoordinateSystem(0.0, -7.5);
     //initializeXiYDelta();
