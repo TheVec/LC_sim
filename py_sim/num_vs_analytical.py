@@ -7,7 +7,6 @@ Created on Sat Nov 26 14:48:14 2022
 
 import numpy as np
 import matplotlib.pyplot as plt
-import math as m
 import os
 
 plt.rcParams['font.size'] = '25'
@@ -20,13 +19,13 @@ plt.rc('font', serif='Helvetica')
 
 
 #Simulation constants       
-DEPTH = 1 #[meters]
-RESOLUTION = 1000  #array size, number of gridpoints 
+DEPTH = 1 
+RESOLUTION = 1000 #array size, number of gridpoints 
 DELTA_X = DEPTH/(RESOLUTION-1)
-DELTA_T = 5e-7 #[sec], to be replaced with actual expression
+DELTA_T = 5e-7 
 THERMAL_DIFFUSIVITY = 1
 c = DELTA_T/(DELTA_X**2)
-print(DELTA_X**2/(2*DELTA_T))
+print(DELTA_X**2/(2*DELTA_T)) #has to be larger than 1 for stable sim
 
 global COEFF_MAT_EXP
 global COEFF_MAT_IMP_INV
@@ -92,6 +91,7 @@ print(n-1)
 filepath = os.path.realpath(os.path.dirname(__file__))
 fig = plt.figure(figsize =(20,15))
 plt.title('Error analysis of numerical solvers', fontsize = 50)
+plt.xlim(right = 0.1)
 plt.plot(timelist, imp_max_res, label = 'implicit')
 plt.plot(timelist, exp_max_res, label = 'explicit')
 plt.grid(True)
@@ -99,4 +99,18 @@ plt.xlabel('Time', fontsize = 30)
 plt.ylabel('Max Error', fontsize = 30)
 plt.legend(fontsize = 25)
 plt.savefig(filepath + '\\..\\output\\analyticalvexplicit.png')
+plt.close(fig)
+
+fig = plt.figure(figsize = (20,15))
+plt.title('Analytical Solutions', fontsize = 50)
+plt.grid(True)
+plt.xlabel('Depth', fontsize = 35)
+plt.ylabel('u(z,t)', fontsize = 35)
+plt.plot(x, computeAnalytical(0, x), color = 'paleturquoise', label = 't = 0')
+plt.plot(x, computeAnalytical(0.005, x), color = 'aquamarine', label = 't = 0.005')
+plt.plot(x, computeAnalytical(0.01, x), color = 'springgreen', label = 't = 0.01')
+plt.plot(x, computeAnalytical(0.05, x), color = 'lime', label = 't = 0.05')
+plt.plot(x, computeAnalytical(0.1, x), color = 'darkgreen', label = 't = 0.1')
+plt.legend(fontsize = 25)
+plt.savefig(filepath + '\\..\\output\\analytical.png')
 plt.close(fig)
