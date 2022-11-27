@@ -44,7 +44,7 @@ int main()
     double millis = 1000.0 * (clock() - start) / (double)CLOCKS_PER_SEC;
     printf("%.3lfms\n", millis);
 
-    plotMultiState("\"surface3d\"", "Temperature profile");
+    plotMultiState("\"Wheel skidder\"", "April - June");
 
     //computePositionInEarthCoordinateSystem(0.0, -7.5);
     //initializeXiYDelta();
